@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-ApiPmApplication<api-pm>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.cybrixsystems.apipm.ApiPmApplication",
+            "projectName": "api-pm",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
