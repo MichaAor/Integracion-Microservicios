@@ -1,5 +1,6 @@
 package com.cybrixsystems.apipm.Model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class Product{
     private String brand;
     private int stock;
     private float unitPrice;
-    private LocalDateTime releaseDate;
+    private LocalDate releaseDate;
     private LocalDateTime creationDate;
     private LocalDateTime lastModDate;
 
@@ -32,4 +33,29 @@ public class Product{
         inverseJoinColumns = @JoinColumn(name = "idCategory")
     )
     private List<Category> categories;
+
+    public Product(Long id, String name, String brand, int stock, float unitPrice,
+                    LocalDate releaseDate){
+        this.idProduct = id;                
+        this.name = name;                
+        this.brand = brand;                
+        this.stock = stock;                
+        this.unitPrice = unitPrice;                
+        this.releaseDate = releaseDate; 
+        this.creationDate = LocalDateTime.now();
+        this.lastModDate = LocalDateTime.now();               
+    }
+
+    public Product(Long id, String name, String brand, int stock, float unitPrice,
+                    LocalDate releaseDate,List<Category> categories){
+        this.idProduct = id;                
+        this.name = name;                
+        this.brand = brand;                
+        this.stock = stock;                
+        this.unitPrice = unitPrice;                
+        this.releaseDate = releaseDate; 
+        this.creationDate = LocalDateTime.now();
+        this.lastModDate = LocalDateTime.now();
+        this.categories = categories;               
+    }
 }

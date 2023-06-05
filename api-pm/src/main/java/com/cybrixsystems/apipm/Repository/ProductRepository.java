@@ -1,11 +1,13 @@
 package com.cybrixsystems.apipm.Repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import java.util.List;
+import java.util.Optional;
 
 import com.cybrixsystems.apipm.Model.Product;
 
-@Repository
-public interface ProductRepository extends JpaRepository<Product,Repository > {
-
+public interface ProductRepository{
+    public List<Product> findAll();
+    public Optional<Product> findById(Long idP);
+    public Product save(Product Product);
+    public void deleteById(Long idP);
 }

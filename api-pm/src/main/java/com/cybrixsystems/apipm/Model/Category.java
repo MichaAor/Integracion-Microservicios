@@ -20,4 +20,9 @@ public class Category{
     
     @ManyToMany(mappedBy = "categories")
     private List<Product> products;
+
+    public Category(Long id,String name){
+        this.idCategory = id;
+        this.name = name;
+    }
 }

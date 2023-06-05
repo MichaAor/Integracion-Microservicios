@@ -1,11 +1,15 @@
 package com.cybrixsystems.apipm.Repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
 
 import com.cybrixsystems.apipm.Model.Category;
 
-@Repository
-public interface CategoryRepository extends JpaRepository<Category, Long> {
-
+public interface CategoryRepository {
+    public List<Category> findAll();
+    public Optional<Category> findById(Long idC);
+    public Optional<Category> findByName(String name);
+    public Category save(Category category);
+    public void deleteById(Long idC);
 }
