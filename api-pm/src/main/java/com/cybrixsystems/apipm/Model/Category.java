@@ -1,5 +1,6 @@
 package com.cybrixsystems.apipm.Model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.*;
@@ -24,5 +25,6 @@ public class Category{
     public Category(Long id,String name){
         this.idCategory = id;
         this.name = name;
+        this.products = new ArrayList<>();
     }
 }

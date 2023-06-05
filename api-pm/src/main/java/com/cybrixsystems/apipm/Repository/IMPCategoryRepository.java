@@ -44,8 +44,7 @@ public class IMPCategoryRepository implements CategoryRepository{
         System.out.println("IMPCategoryRepository.deleteById");
         Optional<Category> cat = this.findById(idC);
         if(cat.isPresent()){
-            System.err.println("LLEGUEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-            Data.CATEGORIES.remove(cat.get());
+            this.findAll().remove(cat.get());
             System.err.println("IMPCategoryRepository.deleteById COMPLETE DELETE");
         }
     }
