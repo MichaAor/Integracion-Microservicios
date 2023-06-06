@@ -2,6 +2,7 @@ package com.cybrixsystems.apipm.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.cybrixsystems.apipm.Data;
 import com.cybrixsystems.apipm.Model.Category;
@@ -12,6 +13,14 @@ public class IMPCategoryRepository implements CategoryRepository{
     public List<Category> findAll() {
         System.out.println("IMPCategoryRepository.findAll");
     return Data.CATEGORIES;    
+    }
+
+    @Override
+    public List<Category> findAllByIdP(Long idP) {
+        System.out.println("IMPCategoryRepository.findAllByIdP: " + idP );
+    return this.findAll().stream()
+                .filter(e -> e.getProducts().stream().anyMatch(p -> p.getIdProduct() == idP))
+                .collect(Collectors.toList());
     }
 
     @Override

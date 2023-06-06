@@ -8,6 +8,7 @@ import com.cybrixsystems.apipm.Model.Product;
 public interface ProductService {
     List<Product> findAllProducts();
     Optional<Product> findProductById(Long idP);
-    void save(Product product);
+    Optional<Product> findProductByName(String name);
+    Product save(Product product);
     void deleteProductById(Long idC);
 }

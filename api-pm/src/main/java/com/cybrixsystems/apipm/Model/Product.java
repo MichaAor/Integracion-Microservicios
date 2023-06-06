@@ -2,6 +2,7 @@ package com.cybrixsystems.apipm.Model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.*;
@@ -43,7 +44,8 @@ public class Product{
         this.unitPrice = unitPrice;                
         this.releaseDate = releaseDate; 
         this.creationDate = LocalDateTime.now();
-        this.lastModDate = LocalDateTime.now();               
+        this.lastModDate = LocalDateTime.now();        
+        this.categories = new ArrayList<>();       
     }
 
     public Product(Long id, String name, String brand, int stock, float unitPrice,
@@ -57,5 +59,21 @@ public class Product{
         this.creationDate = LocalDateTime.now();
         this.lastModDate = LocalDateTime.now();
         this.categories = categories;               
+    }
+
+    public Product(String name, String brand, int stock, float unitPrice,
+                    LocalDate releaseDate){              
+        this.name = name;                
+        this.brand = brand;                
+        this.stock = stock;                
+        this.unitPrice = unitPrice;                
+        this.releaseDate = releaseDate; 
+        this.creationDate = LocalDateTime.now();
+        this.lastModDate = LocalDateTime.now(); 
+        this.categories = new ArrayList<>();          
+    }
+
+    public void addCategory(Category category){
+        this.categories.add(category);
     }
 }

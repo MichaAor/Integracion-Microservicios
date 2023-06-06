@@ -27,4 +27,13 @@ public class Category{
         this.name = name;
         this.products = new ArrayList<>();
     }
+
+    public Category(String name){
+        this.name = name;
+        this.products = new ArrayList<>();
+    }
+
+    public void addProduct(Product product){
+        this.products.add(product);
+    }
 }

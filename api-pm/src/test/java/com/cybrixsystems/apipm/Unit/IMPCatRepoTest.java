@@ -3,20 +3,13 @@ package com.cybrixsystems.apipm.Unit;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doCallRealMethod;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -39,7 +32,7 @@ public class IMPCatRepoTest {
     IMPCategoryService cs;
 
     @Nested
-    public class findTestsNested{
+    public class findAllTestsNested{
         @Test
         @Order(1)
         void findAll_Test(){
@@ -62,7 +55,10 @@ public class IMPCatRepoTest {
             assertTrue(categories.isEmpty());
             assertEquals(0,categories.size());
         }
-        
+    }
+
+    @Nested
+    public class findByTestsNested{
         @Test
         @Order(3)
         void findById_Test(){
@@ -173,11 +169,11 @@ public class IMPCatRepoTest {
         void doAnswerSave_test(){
             //Cuando se invoca el guardar de cualquier examen, le asignamos un id +1.
             //Trabajamos en un entorno impulsado al comportamiento.
-                Category newCat = new Category();   newCat.setName("Manhwa");
+                Category newCat = Data.CATEGORY_TO_SAVE;
 
                 //Given: Precondiciones en el entorno de prueba.
                 doAnswer(new Answer<Category>(){
-                    Long sequence = 5L;
+                    Long sequence = 4L;
                         @Override
                         public Category answer (InvocationOnMock invocationOnMock){
                             Category category = invocationOnMock.getArgument(0);
@@ -191,10 +187,30 @@ public class IMPCatRepoTest {
 
                 //Then: Valida entorno de prueba.
                 assertNotNull(category.getIdCategory());
-                assertEquals(5L,category.getIdCategory());
+                assertEquals(4L,category.getIdCategory());
                 assertEquals("Manhwa",category.getName());
 
                 verify(cr).save(any(Category.class));
+        }
+
+        @Test
+        @Order(10)
+        void saveWithProducts_test(){
+            Category newCat = Data.CATEGORY_TO_SAVE;
+            newCat.addProduct(Data.PRODUCT);  
+            
+            doCallRealMethod().when(cr).save(newCat);
+
+            Category saveCat = cs.save(newCat);
+
+            newCat.setIdCategory(4L);
+
+            assertNotNull(saveCat.getIdCategory());
+            assertEquals(4L,saveCat.getIdCategory());
+            assertEquals("Manhwa",saveCat.getName());
+            assertEquals(newCat,saveCat);
+
+            verify(cr).save(any(Category.class));
         }
     }
 
@@ -202,7 +218,7 @@ public class IMPCatRepoTest {
     @Nested
     public class deleteTestsNested{
         @Test
-        @Order(10)
+        @Order(11)
         void deleteById_test(){
             doCallRealMethod().when(cr).findAll();
             doCallRealMethod().when(cr).findById(anyLong());
@@ -222,7 +238,7 @@ public class IMPCatRepoTest {
         }
     
         @Test
-        @Order(11)
+        @Order(12)
         void deleteByIdErrorInput_test(){
             when(cr.findAll()).thenReturn(Data.CATEGORIES);
             doCallRealMethod().when(cr).findById(anyLong());
