@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.cybrixsystems.apipm.Model.Category;
 import com.cybrixsystems.apipm.Repository.CategoryRepository;
 
+@Service
 public class IMPCategoryService implements CategoryService{
     @Autowired
     private CategoryRepository cr;
@@ -34,6 +36,7 @@ public class IMPCategoryService implements CategoryService{
 
     @Override
     public void deleteCategoryById(Long idC) {
+        
         cr.deleteById(idC);
     }
 }
