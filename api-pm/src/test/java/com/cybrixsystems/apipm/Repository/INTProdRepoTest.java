@@ -6,7 +6,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.Arrays;
 // import java.util.stream.Collectors;
+
+import javax.persistence.EntityManager;
 
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +31,9 @@ public class INTProdRepoTest {
 
     // @Autowired
     // private CategoryRepository cr;
+
+    @Autowired
+    private EntityManager em;
 
     @Nested
     public class BasicTests {
@@ -125,7 +132,7 @@ public class INTProdRepoTest {
 
 
         @Test
-        void findAllWithCategories(){
+        void findAllWithCategories_test(){
             List<Product> products = pr.findAll();
 
             assertFalse(products.isEmpty());
@@ -133,11 +140,36 @@ public class INTProdRepoTest {
                 .anyMatch(p -> p.getCategories().isEmpty()));
 
             products.forEach(System.out :: println);    
-        }   
+        }  
+        
+        @Test
+        void findByIdWithCategories_test(){
+            Optional<Product> product = pr.findById(4L);
+
+            assertTrue(product.isPresent());
+            assertFalse(product.isEmpty());
+            assertEquals(4L, product.orElseThrow().getIdProduct());
+            assertEquals("Rurouni Kenshin Profiles", product.orElseThrow().getName());
+            assertEquals("VIZ", product.orElseThrow().getBrand());
+            assertEquals(2, product.orElseThrow().getStock());
+            assertEquals(15900f, product.orElseThrow().getUnitPrice());
+            assertEquals("2005-11-01", product.orElseThrow().getReleaseDate().toString());
+            assertFalse(product.orElseThrow().getCategories().isEmpty());
+            assertTrue(product.orElseThrow().getCategories().stream()
+                        .allMatch(c -> c.getIdCategory() != null ));          
+        }
+
+        @Test
+        void findByIdWithCategories_notFound_test(){
+            Optional<Product> product = pr.findById(9L);
+
+            assertFalse(product.isPresent());
+            assertTrue(product.isEmpty());       
+        }
 
 
         @Test
-        void saveWithCategoriesNew(){
+        void saveWithCategoriesNew_test(){
             Category cat1 = new Category();
             cat1.setName("Original Soundtrack");
             Category cat2 = new Category();
@@ -149,6 +181,30 @@ public class INTProdRepoTest {
 
             Product prodNew = new Product("Cyberpunk: Edgerunners Soundtrack","Studio Trigger"
                 ,4,7900f,LocalDate.of(2022, 9, 13),categories);
+            System.out.println("---PRODUCT BEFORE SAVED---" + prodNew.toString());    
+
+            Product prodSaved = pr.save(prodNew);
+
+            assertNotNull(prodSaved.getIdProduct());
+            assertEquals(prodSaved.getName(),prodNew.getName());
+            assertEquals(prodSaved.getBrand(),prodNew.getBrand());
+            assertEquals(prodSaved.getUnitPrice(),prodNew.getUnitPrice());            
+            assertFalse(prodSaved.getCategories().isEmpty());
+            assertTrue(prodSaved.getCategories().stream().allMatch(c -> c.getIdCategory() != null));
+
+            System.out.println("---PRODUCT SAVED---" + prodSaved.toString());
+        }
+
+        @Test
+        void saveWithCategoriesExists_test(){
+            List<Long> catsIDs = Arrays.asList(3L,4L);
+
+            List<Category> categories = catsIDs.stream()
+                                        .map(id -> em.getReference(Category.class, id))
+                                        .collect(Collectors.toList()); 
+
+            Product prodNew = new Product("BIOSHOCK: RAPTURE","TimunMas"
+                ,9,5200f,LocalDate.of(2012, 03, 20),categories);
             System.out.println("---PRODUCT BEFORE SAVED---" + prodNew.toString());    
 
             Product prodSaved = pr.save(prodNew);

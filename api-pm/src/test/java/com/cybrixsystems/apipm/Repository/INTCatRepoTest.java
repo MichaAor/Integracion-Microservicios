@@ -4,9 +4,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.persistence.EntityManager;
 
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +28,9 @@ import com.cybrixsystems.apipm.Model.Product;
 public class INTCatRepoTest {
     @Autowired
     private CategoryRepository cr;
+
+    @Autowired
+    private EntityManager em;
 
     @Nested
     public class BasicTest {
@@ -104,7 +111,7 @@ public class INTCatRepoTest {
     public class Relationship{
 
         @Test
-        void findAllWithProducts(){
+        void findAllWithProducts_test(){
             List<Category> categories = cr.findAll();
 
             assertFalse(categories.isEmpty());
@@ -115,16 +122,27 @@ public class INTCatRepoTest {
         }
 
         @Test
-        void findByIdWithProducts(){
+        void findByIdWithProducts_test(){
             Optional<Category> category = cr.findById(3L);
 
             assertTrue(category.isPresent());
             assertEquals("Novel", category.orElseThrow().getName());
-            assertTrue(category.orElseThrow().getProducts().stream().allMatch(p -> p.getIdProduct() != null));  
+            assertTrue(category.orElseThrow().getProducts().stream()
+                        .allMatch(p -> p.getIdProduct() != null));  
         }
 
         @Test
-        void saveWithProducts(){
+        void findByNameWithProducts_test(){
+            Optional<Category> category = cr.findById(2L);
+
+            assertTrue(category.isPresent());
+            assertEquals("Comic", category.orElseThrow().getName());
+            assertTrue(category.orElseThrow().getProducts().stream()
+                        .allMatch(p -> p.getIdProduct() != null));  
+        }
+
+        @Test
+        void saveWithProductsNews_test(){
             Product prod1 = new Product("Cyberpunk: Edgerunners Soundtrack","Studio Trigger"
                 ,4,7900f,LocalDate.of(2022, 9, 13));
             Product prod2 = new Product("Saint Seiya Eternal CD-Box","Columbia Music Entertainment"
@@ -137,6 +155,27 @@ public class INTCatRepoTest {
             System.out.println("---CATEGORY SAVED---" + catNew.toString());
 
             Category catSaved = cr.save(catNew);
+
+            assertNotNull(catSaved.getIdCategory());
+            assertEquals(catSaved.getName(),catNew.getName());            
+            assertTrue(catSaved.getProducts().stream().allMatch(p -> p.getIdProduct() != null));            
+
+            System.out.println("---CATEGORY SAVED---" + catSaved.toString());
+        }
+
+        @Test
+        void saveWithProductsExists_test(){
+            List<Long> prodsIDs = Arrays.asList(1L,4L);
+            List<Product> products = prodsIDs.stream()
+                                    .map(id -> em.getReference(Product.class, id))
+                                    .collect(Collectors.toList());
+
+            Category catNew = new Category("Japanese",products);
+
+            System.out.println("---CATEGORY BEFORE SAVED---" + catNew.toString());
+
+            Category catSaved = cr.save(catNew);
+            //Category catSaved = cr.save(catNew);
 
             assertNotNull(catSaved.getIdCategory());
             assertEquals(catSaved.getName(),catNew.getName());            
