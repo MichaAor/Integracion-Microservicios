@@ -4,8 +4,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.*;
 
 @AllArgsConstructor
@@ -26,8 +30,15 @@ public class Product {
     private LocalDateTime registerDate;
     private LocalDateTime lastModDate;
 
-    @ManyToMany
-    @JoinTable(name = "productCategory", joinColumns = @JoinColumn(name = "idProduct"), inverseJoinColumns = @JoinColumn(name = "idCategory"))
+    @JsonManagedReference
+    @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinTable(name = "ProductCategory", 
+        joinColumns = {
+            @JoinColumn(name = "idProduct",referencedColumnName = "idProduct")
+        }, 
+        inverseJoinColumns = {
+            @JoinColumn(name = "idCategory",referencedColumnName = "idCategory")
+        })
     private List<Category> categories;
 
     public Product(Long id, String name, String brand, int stock, float unitPrice,
@@ -86,13 +97,30 @@ public class Product {
 
     @Override
     public String toString() {
-        return "\nID: " + this.idProduct +
+        return  "\n----p----p----p----p----p" +
+                "\nID: " + this.idProduct +
                 "\nName: " + this.name +
                 "\nBrand: " + this.brand +
                 "\nStock: " + this.stock +
                 "\nUnit Price: " + this.unitPrice +
                 "\nRelease Date: " + this.releaseDate +
                 "\nRegister Date: " + this.registerDate +
-                "\nLast Modification Date: " + this.lastModDate;
+                "\nLast Modification Date: " + this.lastModDate +
+                "\n" + this.categories.stream()
+                .map(Category::toStringWithoutProducts).collect(Collectors.joining("\n")) +
+                "\n----p----p----p----p----p";
+    }
+
+    public String toStringWithoutCategories() {
+        return  "\n----p----p----p----p----p" +
+                "\nID: " + this.idProduct +
+                "\nName: " + this.name +
+                "\nBrand: " + this.brand +
+                "\nStock: " + this.stock +
+                "\nUnit Price: " + this.unitPrice +
+                "\nRelease Date: " + this.releaseDate +
+                "\nRegister Date: " + this.registerDate +
+                "\nLast Modification Date: " + this.lastModDate +
+                "\n----p----p----p----p----p";
     }
 }

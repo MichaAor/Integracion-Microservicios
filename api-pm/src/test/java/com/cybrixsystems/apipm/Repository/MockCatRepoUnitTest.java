@@ -31,7 +31,7 @@ public class MockCatRepoUnitTest {
     CategoryService cs;
 
     @Nested
-    public class findAllTestsNested {
+    public class FindAllTestsNested {
        @Test
        @Order(1)
        void findAll_Test(){
@@ -57,7 +57,7 @@ public class MockCatRepoUnitTest {
     }
 
     @Nested
-    public class findByTestsNested {
+    public class FindByTestsNested {
        @Test
        @Order(3)
        void findById_Test(){
@@ -110,7 +110,7 @@ public class MockCatRepoUnitTest {
     }
 
     @Nested
-    public class saveTestsNested {
+    public class SaveTestsNested {
         @Test
         @Order(7)
         void save_test() {
@@ -168,7 +168,7 @@ public class MockCatRepoUnitTest {
     }
 
     @Nested
-    public class deleteTestsNested {
+    public class DeleteTestsNested {
         @Test
         @Order(9)
         void deleteById_test() {
