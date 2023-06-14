@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.persistence.*;
@@ -102,8 +103,13 @@ public class Product {
         this.categories.add(category);
     }
 
-    public void remCategory(Category category){
-        this.categories.remove(category);
+    public void remCategory(Long id){
+         Optional<Category> find = this.categories.stream()
+                .filter(c -> c.getIdCategory().compareTo(id) == 0)
+                .findFirst();
+        if (find.isPresent()) {
+            this.categories.remove(find.orElseThrow());
+        }
     }
 
     @Override

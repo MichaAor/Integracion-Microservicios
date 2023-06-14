@@ -26,7 +26,7 @@ public class Category {
     
     @JsonBackReference
     @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY
-    , cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH,CascadeType.DETACH})
+                ,cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH,CascadeType.DETACH})
     private List<Product> products;
 
     public Category(Long id, String name) {

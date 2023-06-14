@@ -165,6 +165,15 @@ public class INTProdRepoTest {
         }
 
         @Test
+        void findAllSearchbarQuery_test(){
+            String search = "man";
+            List<Product> products = pr.findAllBySearch(search);
+
+            assertFalse(products.isEmpty());
+            products.forEach(System.out :: println);
+        }
+
+        @Test
         void findByIdWithCategories_test() {
             Optional<Product> product = pr.findById(4L);
 
@@ -243,15 +252,13 @@ public class INTProdRepoTest {
         @Test
         void updateCategories_test(){
             Optional<Product> prodToUpd = pr.findById(4L);
-            Category catUpd = em.getReference(Category.class, 1L);
             
             assertTrue(prodToUpd.isPresent());
-            assertNotNull(catUpd);
             
             int catSizeBefore = prodToUpd.orElseThrow().getCategories().size();
             System.out.println("---PRODUCT BEFORE UPDATED---" + prodToUpd.orElseThrow().toString());
 
-            prodToUpd.orElseThrow().remCategory(catUpd);
+            prodToUpd.orElseThrow().remCategory(1L);
             Product prodUpdated = pr.save(prodToUpd.orElseThrow());
 
             int catSizeAfter = prodUpdated.getCategories().size();
@@ -262,11 +269,15 @@ public class INTProdRepoTest {
             assertTrue(prodUpdated.getBrand().compareTo(prodToUpd.orElseThrow().getBrand()) == 0);
             assertNotEquals(catSizeBefore,catSizeAfter);
             assertFalse(prodUpdated.getCategories().stream()
-                        .allMatch(c -> c.getName().compareTo("Manga") ==0));
+                        .allMatch(c -> c.getName().compareTo("Manga") == 0));
         }
 
         @Test
         void deleteById_test() {
+/*
+ * A diferencia de Category, no se requiere de desvinculación y se realizar el delete sin problemas.
+ * Testeado con todas los registros disponibles en import.sql
+ */
             int sizeBefore = pr.findAll().size();
             Long idDel = 4L;
             pr.deleteById(idDel);
@@ -277,9 +288,9 @@ public class INTProdRepoTest {
             assertFalse(prodDel.isPresent());
 
             List<Product> products = pr.findAll();
-            products.forEach(System.out::println);
 
             assertNotEquals(sizeBefore, products.size());
+            products.forEach(System.out::println);
         }
     }
 }
