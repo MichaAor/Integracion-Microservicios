@@ -30,8 +30,15 @@ public class Product {
     private LocalDateTime registerDate;
     private LocalDateTime lastModDate;
 
+    /* 
+     * cascade=ALL is equivalent to cascade={PERSIST, MERGE, REMOVE, REFRESH, DETACH}. 
+     ! En caso de borrar una entidad asociada a otra, se ejecuta la cascada borrando también los
+     ! otros productos asociados a la categoría, por lo cual un deleteBy borraría mas que solo 1 entidad.
+     ? Como solución, restringir cascade.REMOVE para evitar la propagación del delete y borrar solo 1.
+    */
     @JsonManagedReference
-    @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY
+                ,cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH,CascadeType.DETACH})
     @JoinTable(name = "ProductCategory", 
         joinColumns = {
             @JoinColumn(name = "idProduct",referencedColumnName = "idProduct")
@@ -93,6 +100,10 @@ public class Product {
 
     public void addCategory(Category category) {
         this.categories.add(category);
+    }
+
+    public void remCategory(Category category){
+        this.categories.remove(category);
     }
 
     @Override

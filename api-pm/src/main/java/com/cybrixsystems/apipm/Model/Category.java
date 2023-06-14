@@ -22,9 +22,11 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idCategory;
     private String name;
-
+    
+    
     @JsonBackReference
-    @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY
+    , cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH,CascadeType.DETACH})
     private List<Product> products;
 
     public Category(Long id, String name) {

@@ -85,76 +85,87 @@ public class INTProdRepoTest {
 
     @Nested
     public class Relationship {
-    /***
-    * !detached entity passed to persist     
-    * * Error que ocurre en Hibernate cuando se intenta persistir una entidad en estado "detached",
-    * * debido a la falta de cascada de ambos lados de la entidad y de un fetch,     
-    * * como una solución temporal se puede realizar lo siguiente     
-    * ? @Test          
-        void saveWithExistsCategories(){
-            Category cat1 = new Category();
-            cat1.setIdCategory(1L);
-            Category cat2 = new Category();
-            cat2.setIdCategory(2L);
-            List<Category> categories = new ArrayList<>();
-            categories.add(cat1);
-            categories.add(cat2);
-                
-            Product prodNew = new Product("Ikkitousen 20","Ivrea",23,4800f
-                    ,LocalDate.of(2000, 4, 26)
-                    ,categories);
-
-    * ! Vinculamos las entidades al entity manager y las cambiamos de estado(deja detached)
-    * ! al traerlas completas del repo con find.
-            List<Category> existingCategories = prodNew.getCategories().stream()
-                                                .map(c -> cr.findById(c.getIdCategory()).orElseThrow())
-                                                .collect(Collectors.toList());
-            prodNew.setCategories(existingCategories);   
-
-
-            Product prodSaved = pr.save(prodNew);
-
-            assertNotNull(prodSaved.getIdProduct());
-            assertEquals(prodSaved.getName(),prodNew.getName());
-            assertEquals(prodSaved.getBrand(),prodNew.getBrand());
-            assertEquals(prodSaved.getUnitPrice(),prodNew.getUnitPrice());            
-
-            
-            Optional<Product> productFind = pr.findById(prodSaved.getIdProduct());
-            
-            assertEquals(productFind.orElseThrow(),prodSaved);
-            assertFalse(productFind.orElseThrow().getCategories().isEmpty());
-            
-            System.out.println("---Product---" + productFind.orElseThrow().toString() + "\n---Categories---");
-            productFind.orElseThrow().getCategories().forEach(System.out::println);
-            }
-    */    
-
+        /*
+         !detached entity passed to persist
+         * Error que ocurre en Hibernate cuando se intenta persistir una entidad en estado "detached",
+         * debido a la falta de cascada de ambos lados de la entidad y de un fetch,
+         * como una solución temporal se puede realizar lo siguiente
+         ? @Test
+         * void saveWithExistsCategories(){
+         * Category cat1 = new Category();
+         * cat1.setIdCategory(1L);
+         * Category cat2 = new Category();
+         * cat2.setIdCategory(2L);
+         * List<Category> categories = new ArrayList<>();
+         * categories.add(cat1);
+         * categories.add(cat2);
+         * 
+         * Product prodNew = new Product("Ikkitousen 20","Ivrea",23,4800f
+         * ,LocalDate.of(2000, 4, 26)
+         * ,categories);
+         * 
+         ! Vinculamos las entidades al entity manager y las cambiamos de estado(deja detached)
+         ! al traerlas completas del repo con find.
+         * List<Category> existingCategories = prodNew.getCategories().stream()
+         * .map(c -> cr.findById(c.getIdCategory()).orElseThrow())
+         * .collect(Collectors.toList());
+         * prodNew.setCategories(existingCategories);
+         * 
+         * Product prodSaved = pr.save(prodNew);
+         * 
+         * assertNotNull(prodSaved.getIdProduct());
+         * assertEquals(prodSaved.getName(),prodNew.getName());
+         * assertEquals(prodSaved.getBrand(),prodNew.getBrand());
+         * assertEquals(prodSaved.getUnitPrice(),prodNew.getUnitPrice());
+         * 
+         * Optional<Product> productFind = pr.findById(prodSaved.getIdProduct());
+         * 
+         * assertEquals(productFind.orElseThrow(),prodSaved);
+         * assertFalse(productFind.orElseThrow().getCategories().isEmpty());
+         * 
+         * System.out.println("---Product---" + productFind.orElseThrow().toString() +
+         * "\n---Categories---");
+         * productFind.orElseThrow().getCategories().forEach(System.out::println);
+         * }
+         */
 
         @Test
-        void findAllWithCategories_test(){
+        void findAllWithCategories_test() {
             List<Product> products = pr.findAll();
 
             assertFalse(products.isEmpty());
             assertFalse(products.stream()
-                .anyMatch(p -> p.getCategories().isEmpty()));
+                    .anyMatch(p -> p.getCategories().isEmpty()));
 
-            products.forEach(System.out :: println);    
-        }  
+            products.forEach(System.out::println);
+        }
 
         @Test
-        void findAllByCategoriesName_test(){
+        void findAllByCategoriesName_test() {
             List<Product> products = pr.findAllByCategoriesName("Manga");
 
             assertFalse(products.isEmpty());
             assertFalse(products.stream()
-                .allMatch(p -> p.getCategories().stream()
-                    .allMatch(c -> c.getName().compareTo("Manga") == 0)));
+                    .allMatch(p -> p.getCategories().stream()
+                            .allMatch(c -> c.getName().compareTo("Manga") == 0)));
+            products.forEach(System.out::println);
+        }
+
+        /*
+         ? Searchbar en desarrollo, por ahora se utilizar contemplaciones jpa, es posible usar query.
+         ? El nombre del método queda muy grande, incluso agregando los ignoreCase.
+         */
+        @Test
+        void findAllSearchbar_test(){
+            String search = "Man";
+            List<Product> products = pr.findAllByNameContainingOrBrandContainingOrCategoriesNameContaining(search,search,search);
+
+            assertFalse(products.isEmpty());
             products.forEach(System.out :: println);
         }
-        
+
         @Test
-        void findByIdWithCategories_test(){
+        void findByIdWithCategories_test() {
             Optional<Product> product = pr.findById(4L);
 
             assertTrue(product.isPresent());
@@ -167,19 +178,19 @@ public class INTProdRepoTest {
             assertEquals("2005-11-01", product.orElseThrow().getReleaseDate().toString());
             assertFalse(product.orElseThrow().getCategories().isEmpty());
             assertTrue(product.orElseThrow().getCategories().stream()
-                        .allMatch(c -> c.getIdCategory() != null ));          
+                    .allMatch(c -> c.getIdCategory() != null));
         }
 
         @Test
-        void findByIdWithCategories_notFound_test(){
+        void findByIdWithCategories_notFound_test() {
             Optional<Product> product = pr.findById(9L);
 
             assertFalse(product.isPresent());
-            assertTrue(product.isEmpty());       
+            assertTrue(product.isEmpty());
         }
 
         @Test
-        void saveWithCategoriesNew_test(){
+        void saveWithCategoriesNew_test() {
             Category cat1 = new Category();
             cat1.setName("Original Soundtrack");
             Category cat2 = new Category();
@@ -189,16 +200,16 @@ public class INTProdRepoTest {
             categories.add(cat1);
             categories.add(cat2);
 
-            Product prodNew = new Product("Cyberpunk: Edgerunners Soundtrack","Studio Trigger"
-                ,4,7900f,LocalDate.of(2022, 9, 13),categories);
-            System.out.println("---PRODUCT BEFORE SAVED---" + prodNew.toString());    
+            Product prodNew = new Product("Cyberpunk: Edgerunners Soundtrack", "Studio Trigger", 4, 7900f,
+                    LocalDate.of(2022, 9, 13), categories);
+            System.out.println("---PRODUCT BEFORE SAVED---" + prodNew.toString());
 
             Product prodSaved = pr.save(prodNew);
 
             assertNotNull(prodSaved.getIdProduct());
-            assertEquals(prodSaved.getName(),prodNew.getName());
-            assertEquals(prodSaved.getBrand(),prodNew.getBrand());
-            assertEquals(prodSaved.getUnitPrice(),prodNew.getUnitPrice());            
+            assertEquals(prodSaved.getName(), prodNew.getName());
+            assertEquals(prodSaved.getBrand(), prodNew.getBrand());
+            assertEquals(prodSaved.getUnitPrice(), prodNew.getUnitPrice());
             assertFalse(prodSaved.getCategories().isEmpty());
             assertTrue(prodSaved.getCategories().stream().allMatch(c -> c.getIdCategory() != null));
 
@@ -206,45 +217,69 @@ public class INTProdRepoTest {
         }
 
         @Test
-        void saveWithCategoriesExists_test(){
-            List<Long> catsIDs = Arrays.asList(3L,4L);
+        void saveWithCategoriesExists_test() {
+            List<Long> catsIDs = Arrays.asList(3L, 4L);
 
             List<Category> categories = catsIDs.stream()
-                                        .map(id -> em.getReference(Category.class, id))
-                                        .collect(Collectors.toList()); 
+                    .map(id -> em.getReference(Category.class, id))
+                    .collect(Collectors.toList());
 
-            Product prodNew = new Product("BIOSHOCK: RAPTURE","TimunMas"
-                ,9,5200f,LocalDate.of(2012, 03, 20),categories);
-            System.out.println("---PRODUCT BEFORE SAVED---" + prodNew.toString());    
+            Product prodNew = new Product("BIOSHOCK: RAPTURE", "TimunMas", 9, 5200f, LocalDate.of(2012, 03, 20),
+                    categories);
+            System.out.println("---PRODUCT BEFORE SAVED---" + prodNew.toString());
 
             Product prodSaved = pr.save(prodNew);
 
             assertNotNull(prodSaved.getIdProduct());
-            assertEquals(prodSaved.getName(),prodNew.getName());
-            assertEquals(prodSaved.getBrand(),prodNew.getBrand());
-            assertEquals(prodSaved.getUnitPrice(),prodNew.getUnitPrice());            
+            assertEquals(prodSaved.getName(), prodNew.getName());
+            assertEquals(prodSaved.getBrand(), prodNew.getBrand());
+            assertEquals(prodSaved.getUnitPrice(), prodNew.getUnitPrice());
             assertFalse(prodSaved.getCategories().isEmpty());
             assertTrue(prodSaved.getCategories().stream().allMatch(c -> c.getIdCategory() != null));
 
             System.out.println("---PRODUCT SAVED---" + prodSaved.toString());
         }
 
-        // @Test
-        // void deleteById_test(){
-        //     int sizeBefore = pr.findAll().size();
-        //     Long idDel = 4L;
-        //     pr.deleteById(idDel);
+        @Test
+        void updateCategories_test(){
+            Optional<Product> prodToUpd = pr.findById(4L);
+            Category catUpd = em.getReference(Category.class, 1L);
             
-        //     Optional<Product> prodDel = pr.findById(idDel);
+            assertTrue(prodToUpd.isPresent());
+            assertNotNull(catUpd);
+            
+            int catSizeBefore = prodToUpd.orElseThrow().getCategories().size();
+            System.out.println("---PRODUCT BEFORE UPDATED---" + prodToUpd.orElseThrow().toString());
 
-        //     assertTrue(prodDel.isEmpty());
-        //     assertFalse(prodDel.isPresent());
+            prodToUpd.orElseThrow().remCategory(catUpd);
+            Product prodUpdated = pr.save(prodToUpd.orElseThrow());
 
-        //    List<Product> products = pr.findAll();
-        //     products.forEach(System.out :: println);
-           
-        //  assertEquals(sizeBefore - 1,products.size());
-           
-        // }
+            int catSizeAfter = prodUpdated.getCategories().size();
+            System.out.println("---PRODUCT UPDATED---" + prodUpdated.toString());
+
+            assertEquals(prodToUpd.orElseThrow().getIdProduct(), prodUpdated.getIdProduct());
+            assertTrue(prodUpdated.getName().compareTo(prodToUpd.orElseThrow().getName()) == 0);
+            assertTrue(prodUpdated.getBrand().compareTo(prodToUpd.orElseThrow().getBrand()) == 0);
+            assertNotEquals(catSizeBefore,catSizeAfter);
+            assertFalse(prodUpdated.getCategories().stream()
+                        .allMatch(c -> c.getName().compareTo("Manga") ==0));
+        }
+
+        @Test
+        void deleteById_test() {
+            int sizeBefore = pr.findAll().size();
+            Long idDel = 4L;
+            pr.deleteById(idDel);
+
+            Optional<Product> prodDel = pr.findById(idDel);
+
+            assertTrue(prodDel.isEmpty());
+            assertFalse(prodDel.isPresent());
+
+            List<Product> products = pr.findAll();
+            products.forEach(System.out::println);
+
+            assertNotEquals(sizeBefore, products.size());
+        }
     }
 }
