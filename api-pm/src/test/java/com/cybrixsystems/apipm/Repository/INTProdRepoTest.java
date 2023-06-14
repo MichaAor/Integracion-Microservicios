@@ -141,6 +141,17 @@ public class INTProdRepoTest {
 
             products.forEach(System.out :: println);    
         }  
+
+        @Test
+        void findAllByCategoriesName_test(){
+            List<Product> products = pr.findAllByCategoriesName("Manga");
+
+            assertFalse(products.isEmpty());
+            assertFalse(products.stream()
+                .allMatch(p -> p.getCategories().stream()
+                    .allMatch(c -> c.getName().compareTo("Manga") == 0)));
+            products.forEach(System.out :: println);
+        }
         
         @Test
         void findByIdWithCategories_test(){
@@ -166,7 +177,6 @@ public class INTProdRepoTest {
             assertFalse(product.isPresent());
             assertTrue(product.isEmpty());       
         }
-
 
         @Test
         void saveWithCategoriesNew_test(){
@@ -218,6 +228,23 @@ public class INTProdRepoTest {
 
             System.out.println("---PRODUCT SAVED---" + prodSaved.toString());
         }
-    }
 
+        // @Test
+        // void deleteById_test(){
+        //     int sizeBefore = pr.findAll().size();
+        //     Long idDel = 4L;
+        //     pr.deleteById(idDel);
+            
+        //     Optional<Product> prodDel = pr.findById(idDel);
+
+        //     assertTrue(prodDel.isEmpty());
+        //     assertFalse(prodDel.isPresent());
+
+        //    List<Product> products = pr.findAll();
+        //     products.forEach(System.out :: println);
+           
+        //  assertEquals(sizeBefore - 1,products.size());
+           
+        // }
+    }
 }
