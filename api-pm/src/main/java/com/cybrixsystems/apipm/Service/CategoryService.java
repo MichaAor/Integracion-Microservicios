@@ -9,6 +9,6 @@ public interface CategoryService {
     List<Category> findAllCategories();
     Optional<Category> findCategoryById(Long idC);
     Optional<Category> findCategoryByName(String name);
-    Category save(Category category);
-    void deleteCategoryById(Long idC);
+    Category saveORupdateCategory(Category category);
+    boolean deleteCategoryById(Long idC);
 }

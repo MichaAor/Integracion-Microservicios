@@ -131,7 +131,7 @@ public class MockCatRepoUnitTest {
             });
 
             // When: ejecuta aquí el entorno de prueba.
-            Category category = cs.save(newCat);
+            Category category = cs.saveORupdateCategory(newCat);
 
             // Then: Valida entorno de prueba.
             assertNotNull(category.getIdCategory());
@@ -157,7 +157,7 @@ public class MockCatRepoUnitTest {
                 }
             }).when(cr).save(any(Category.class));
 
-            Category category = cs.save(newCat);
+            Category category = cs.saveORupdateCategory(newCat);
 
             assertNotNull(category.getIdCategory());
             assertEquals(4L, category.getIdCategory());

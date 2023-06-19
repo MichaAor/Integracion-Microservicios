@@ -50,7 +50,7 @@ public class INTProdRepoTest {
             assertTrue(product.isPresent());
             assertFalse(product.isEmpty());
             assertEquals(2L, product.orElseThrow().getIdProduct());
-            assertEquals("Spiderman - Back in black 1", product.orElseThrow().getName());
+            assertEquals("Spider-Man - Back in black 1", product.orElseThrow().getName());
             assertEquals("Marvel", product.orElseThrow().getBrand());
             assertEquals(10, product.orElseThrow().getStock());
             assertEquals(5700f, product.orElseThrow().getUnitPrice());
@@ -59,12 +59,12 @@ public class INTProdRepoTest {
 
         @Test
         void findByName_test() {
-            Optional<Product> product = pr.findByName("Spiderman - Back in black 1");
+            Optional<Product> product = pr.findByName("Spider-Man - Back in black 1");
 
             assertTrue(product.isPresent());
             assertFalse(product.isEmpty());
             assertEquals(2L, product.orElseThrow().getIdProduct());
-            assertEquals("Spiderman - Back in black 1", product.orElseThrow().getName());
+            assertEquals("Spider-Man - Back in black 1", product.orElseThrow().getName());
             assertEquals("Marvel", product.orElseThrow().getBrand());
             assertEquals(10, product.orElseThrow().getStock());
             assertEquals(5700f, product.orElseThrow().getUnitPrice());

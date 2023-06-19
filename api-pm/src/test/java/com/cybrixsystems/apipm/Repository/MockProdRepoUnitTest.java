@@ -140,7 +140,7 @@ public class MockProdRepoUnitTest {
             });
 
             // When: ejecuta aquí el entorno de prueba.
-            Product prodSaved = ps.save(newProd);
+            Product prodSaved = ps.saveORupdateProduct(newProd);
 
             // Then: Valida entorno de prueba.
             assertNotNull(prodSaved.getIdProduct());
@@ -176,7 +176,7 @@ public class MockProdRepoUnitTest {
             }).when(pr).save(any(Product.class));
 
             // When: ejecuta aquí el entorno de prueba.
-            Product prodSaved = ps.save(newProd);
+            Product prodSaved = ps.saveORupdateProduct(newProd);
 
             // Then: Valida entorno de prueba.
             assertNotNull(prodSaved.getIdProduct());

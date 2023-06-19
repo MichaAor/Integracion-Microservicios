@@ -98,6 +98,9 @@ public class INTCatRepoTest {
             Category category = cr.findById(2L).orElseThrow();
             assertEquals("Comic", category.getName());
 
+            category.getProducts().forEach(p -> p.getCategories()
+                                                        .removeIf(c -> c.getIdCategory().equals(2L)));
+
             cr.delete(category);
 
             assertThrows(NoSuchElementException.class, () -> {
