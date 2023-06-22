@@ -39,7 +39,7 @@ public class CategoryController {
         }
     }
 
-    @PostMapping
+    @PostMapping()
     public ResponseEntity<Category> saveCategory(@RequestBody Category category){
         Category catSaved = cs.saveORupdateCategory(category);
     return ResponseEntity.status(HttpStatus.CREATED).body(catSaved);  

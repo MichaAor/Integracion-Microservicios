@@ -1,5 +1,6 @@
 package com.cybrixsystems.apipm.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +37,7 @@ public class IMPCategoryService implements CategoryService{
     @Override
     @Transactional
     public Category saveORupdateCategory(Category category) {
+        if(category.getProducts() == null){category.setProducts(new ArrayList<>());}
         if(category.getIdCategory() != null){
             Optional<Category> catExist = cr.findById(category.getIdCategory());
             if(catExist.isPresent()){
@@ -59,7 +61,10 @@ public class IMPCategoryService implements CategoryService{
     @Override
     @Transactional
     public boolean deleteCategoryById(Long idC) {
-        cr.deleteById(idC);
+        Optional<Category> catToDel = cr.findById(idC);
+            catToDel.orElseThrow().getProducts().forEach(p -> p.getCategories()
+                                                        .removeIf(c -> c.getIdCategory().equals(idC)));
+            cr.deleteById(idC);
         boolean deleted = cr.findById(idC).isEmpty();
     return deleted;       
     }

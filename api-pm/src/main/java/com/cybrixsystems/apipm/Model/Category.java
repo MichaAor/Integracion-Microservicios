@@ -7,7 +7,9 @@ import java.util.stream.Collectors;
 
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+// import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.*;
 
@@ -24,9 +26,11 @@ public class Category {
     private String name;
     
     
-    @JsonBackReference
+    
     @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY
                 ,cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH,CascadeType.DETACH})
+    // @JsonBackReference
+    @JsonIgnoreProperties("categories")
     private List<Product> products;
 
     public Category(Long id, String name) {

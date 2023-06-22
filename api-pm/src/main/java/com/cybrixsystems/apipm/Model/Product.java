@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+// import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.*;
 
@@ -37,7 +37,7 @@ public class Product {
      ! otros productos asociados a la categoría, por lo cual un deleteBy borraría mas que solo 1 entidad.
      ? Como solución, restringir cascade.REMOVE para evitar la propagación del delete y borrar solo 1.
     */
-    @JsonManagedReference
+    
     @ManyToMany(fetch = FetchType.LAZY
                 ,cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH,CascadeType.DETACH})
     @JoinTable(name = "ProductCategory", 
@@ -47,7 +47,8 @@ public class Product {
         inverseJoinColumns = {
             @JoinColumn(name = "idCategory",referencedColumnName = "idCategory")
         })
-    private List<Category> categories;
+    // @JsonManagedReference    
+        private List<Category> categories;
 
     public Product(Long id, String name, String brand, int stock, float unitPrice,
             LocalDate releaseDate) {
