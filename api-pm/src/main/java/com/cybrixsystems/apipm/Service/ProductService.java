@@ -12,5 +12,5 @@ public interface ProductService {
     Optional<Product> findProductById(Long idP);
     Optional<Product> findProductByName(String name);
     Product saveORupdateProduct(Product product);
-    void deleteProductById(Long idC);
+    boolean deleteProductById(Long idC);
 }

@@ -95,7 +95,7 @@ public class MockCatContUnitTest {
             when(cs.deleteCategoryById(idCategory)).thenReturn(true);
 
             mvc.perform(delete("/apiPM/Categories/"+idCategory))
-            .andExpect(status().is(204));
+                .andExpect(status().is(204));
 
             verify(cs).deleteCategoryById(idCategory);
        }

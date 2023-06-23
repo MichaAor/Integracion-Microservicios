@@ -66,7 +66,11 @@ public class IMPProductService implements ProductService{
     }
 
     @Override
-    public void deleteProductById(Long idP) {
+    public boolean deleteProductById(Long idP) {
+        // Optional<Product> prodToDel = pr.findById(idP);
+        // prodToDel.orElseThrow().getCategories()
         pr.deleteById(idP);
+
+        return pr.findById(idP).isEmpty();
     }
 }

@@ -39,10 +39,15 @@ public class CategoryController {
         }
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Category> saveCategory(@RequestBody Category category){
         Category catSaved = cs.saveORupdateCategory(category);
-    return ResponseEntity.status(HttpStatus.CREATED).body(catSaved);  
+        if(catSaved != null) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(catSaved); 
+        }else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+     
     }
 
     @PutMapping("/{idC}")
