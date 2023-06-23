@@ -60,11 +60,11 @@ public class MockCatContUnitTest {
         when(cs.findAllCategories()).thenReturn(Data.CATEGORIES);
 
         mvc.perform(get("/apiPM/Categories")
-        .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$",hasSize(3)))
-        .andExpect(content().json(mapper.writeValueAsString(Data.CATEGORIES)));
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$",hasSize(3)))
+            .andExpect(content().json(mapper.writeValueAsString(Data.CATEGORIES)));
     }
 
     @Test
