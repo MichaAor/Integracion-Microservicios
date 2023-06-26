@@ -2,6 +2,7 @@ package com.cybrixsystems.apipm.Controller;
 
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
@@ -28,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @Sql("/import.sql")
 public class CatContWebTestClientTest {
     @Autowired
